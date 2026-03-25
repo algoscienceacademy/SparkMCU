@@ -1,4 +1,5 @@
 ---
+yaml_version: 6
 project:
   title: "SparkMCU"
   description: "An open-source AVR-architecture 8-bit microcontroller clone designed for fabrication on SkyWater 130nm technology using the OpenLane ASIC flow."
