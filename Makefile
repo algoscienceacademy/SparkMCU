@@ -11,7 +11,7 @@
 # ============================================================================
 
 # Project settings
-TOP_MODULE  = spark_mcu_top
+TOP_MODULE  = tt_um_spark_mcu_top
 TB_MODULE   = spark_mcu_tb
 PROJECT     = SparkMCU
 

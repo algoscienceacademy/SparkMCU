@@ -27,7 +27,7 @@
 //
 // ============================================================================
 
-module spark_mcu_top (
+module tt_um_spark_mcu_top (
     input  wire        clk,          // System clock
     input  wire        rst_n,        // Active-low reset
 

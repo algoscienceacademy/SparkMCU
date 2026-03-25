@@ -6,7 +6,7 @@
 # ============================================================================
 
 # ----- Design -----
-set ::env(DESIGN_NAME) "spark_mcu_top"
+set ::env(DESIGN_NAME) "tt_um_spark_mcu_top"
 set ::env(DESIGN_IS_CORE) 1
 
 # ----- Source Files -----

@@ -10,7 +10,7 @@ project:
   language: "Verilog"
   pdk: "sky130A"
   std_cell_library: "sky130_fd_sc_hd"
-  top_module: "spark_mcu_top"
+  top_module: "tt_um_spark_mcu_top"
   tiles: "1x1"
   clock_hz: 16000000
   project_url: "https://github.com/algoscienceacademy/SparkMCU"

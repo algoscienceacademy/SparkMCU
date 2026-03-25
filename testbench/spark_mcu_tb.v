@@ -68,7 +68,7 @@ module spark_mcu_tb;
     // -----------------------------------------------------------------------
     // DUT instantiation
     // -----------------------------------------------------------------------
-    spark_mcu_top dut (
+    tt_um_spark_mcu_top dut (
         .clk        (clk),
         .rst_n      (rst_n),
         .portb_in   (portb_in),
