@@ -1,0 +1,14 @@
+---
+project:
+  title: "SparkMCU"
+  description: "An open-source AVR-architecture 8-bit microcontroller clone designed for fabrication on SkyWater 130nm technology using the OpenLane ASIC flow."
+  author: "AlgoScience Academy"
+  github_username: "algoscienceacademy"
+  repo: "SparkMCU"
+  license: "Apache-2.0"
+  language: "Verilog"
+  pdk: "sky130A"
+  std_cell_library: "sky130_fd_sc_hd"
+  top_module: "spark_mcu_top"
+  clock_hz: 16000000
+  project_url: "https://github.com/algoscienceacademy/SparkMCU"
