@@ -5,7 +5,7 @@
 ; Description: Initializes stack, calls main(), handles reset/interrupts
 ; ============================================================================
 
-.include "m328pdef.inc"
+#include <avr/io.h>
 
 .global main
 .global __vectors
@@ -49,11 +49,11 @@ __vectors:
 .section .text
 
 __reset:
-    ; Initialize stack pointer to end of SRAM
-    ldi     r16, lo8(RAMEND)
-    out     SPL, r16
-    ldi     r16, hi8(RAMEND)
-    out     SPH, r16
+    ; Initialize stack pointer to end of SRAM (0x08FF for ATmega328P)
+    ldi     r16, lo8(0x08FF)
+    out     0x3D, r16           ; SPL register (0x3D)
+    ldi     r16, hi8(0x08FF)
+    out     0x3E, r16           ; SPH register (0x3E)
 
     ; Clear BSS section (if needed by linker)
     ; Call global constructors (C++)

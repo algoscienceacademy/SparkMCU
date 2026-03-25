@@ -29,7 +29,7 @@ DUDE         = avrdude
 
 # Flags
 CFLAGS       = -mmcu=$(MCU) $(OPTIMIZATION) -Wall -Wextra -I$(INC_DIR) -DF_CPU=$(FREQ)
-ASFLAGS      = -mmcu=$(MCU)
+ASFLAGS      = -mmcu=$(MCU) -x assembler-with-cpp -I/usr/lib/avr/include
 LDFLAGS      = -T$(SCRIPT_DIR)/linker.ld
 DUDEFLAGS    = -p $(MCU) -c usbasp -B 1
 
@@ -75,18 +75,18 @@ $(OUT_DIR)/%.o: $(SRC_DIR)/%.c | $(OUT_DIR)
 $(OUT_DIR)/lib_%.o: $(LIB_DIR)/%.c | $(OUT_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Assemble ASM sources
+# Assemble ASM sources (with C preprocessor)
 $(OUT_DIR)/%.o: $(SRC_DIR)/%.S | $(OUT_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -x assembler-with-cpp -c $< -o $@
 
 $(OUT_DIR)/lib_%.o: $(LIB_DIR)/%.S | $(OUT_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -x assembler-with-cpp -c $< -o $@
 
 # Build blink example
 blink: $(OUT_DIR)/blink.elf $(OUT_DIR)/blink.hex
 	@echo "Built: blink"
 
-$(OUT_DIR)/blink.elf: $(OUT_DIR)/startup.o $(OUT_DIR)/blink_main.o $(OUT_DIR)/lib_gpio.o $(OUT_DIR)/lib_delay.o
+$(OUT_DIR)/blink.elf: $(OUT_DIR)/blink_main.o $(OUT_DIR)/lib_gpio.o $(OUT_DIR)/lib_delay.o
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 $(OUT_DIR)/blink.hex: $(OUT_DIR)/blink.elf
@@ -96,7 +96,7 @@ $(OUT_DIR)/blink.hex: $(OUT_DIR)/blink.elf
 uart_echo: $(OUT_DIR)/uart_echo.elf $(OUT_DIR)/uart_echo.hex
 	@echo "Built: uart_echo"
 
-$(OUT_DIR)/uart_echo.elf: $(OUT_DIR)/startup.o $(OUT_DIR)/uart_echo_main.o $(OUT_DIR)/lib_uart.o $(OUT_DIR)/lib_gpio.o
+$(OUT_DIR)/uart_echo.elf: $(OUT_DIR)/uart_echo_main.o $(OUT_DIR)/lib_uart.o $(OUT_DIR)/lib_gpio.o
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 $(OUT_DIR)/uart_echo.hex: $(OUT_DIR)/uart_echo.elf
@@ -106,7 +106,7 @@ $(OUT_DIR)/uart_echo.hex: $(OUT_DIR)/uart_echo.elf
 led_toggle: $(OUT_DIR)/led_toggle.elf $(OUT_DIR)/led_toggle.hex
 	@echo "Built: led_toggle"
 
-$(OUT_DIR)/led_toggle.elf: $(OUT_DIR)/startup.o $(OUT_DIR)/led_toggle_main.o $(OUT_DIR)/lib_gpio.o $(OUT_DIR)/lib_timer.o
+$(OUT_DIR)/led_toggle.elf: $(OUT_DIR)/led_toggle_main.o $(OUT_DIR)/lib_gpio.o $(OUT_DIR)/lib_timer.o
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 $(OUT_DIR)/led_toggle.hex: $(OUT_DIR)/led_toggle.elf
@@ -116,7 +116,7 @@ $(OUT_DIR)/led_toggle.hex: $(OUT_DIR)/led_toggle.elf
 timer_demo: $(OUT_DIR)/timer_demo.elf $(OUT_DIR)/timer_demo.hex
 	@echo "Built: timer_demo"
 
-$(OUT_DIR)/timer_demo.elf: $(OUT_DIR)/startup.o $(OUT_DIR)/timer_demo_main.o $(OUT_DIR)/lib_timer.o $(OUT_DIR)/lib_uart.o
+$(OUT_DIR)/timer_demo.elf: $(OUT_DIR)/timer_demo_main.o $(OUT_DIR)/lib_timer.o $(OUT_DIR)/lib_uart.o
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 $(OUT_DIR)/timer_demo.hex: $(OUT_DIR)/timer_demo.elf
