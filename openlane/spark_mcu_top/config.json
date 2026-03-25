@@ -1,0 +1,49 @@
+{
+    "DESIGN_NAME": "spark_mcu_top",
+    "DESIGN_IS_CORE": true,
+    "VERILOG_FILES": [
+        "dir::../../rtl/core/spark_pkg.v",
+        "dir::../../rtl/core/spark_alu.v",
+        "dir::../../rtl/core/spark_regfile.v",
+        "dir::../../rtl/core/spark_decoder.v",
+        "dir::../../rtl/core/spark_cpu.v",
+        "dir::../../rtl/memory/spark_pmem.v",
+        "dir::../../rtl/memory/spark_dmem.v",
+        "dir::../../rtl/memory/spark_bus_ctrl.v",
+        "dir::../../rtl/peripherals/spark_gpio.v",
+        "dir::../../rtl/peripherals/spark_uart.v",
+        "dir::../../rtl/peripherals/spark_spi.v",
+        "dir::../../rtl/peripherals/spark_timer0.v",
+        "dir::../../rtl/peripherals/spark_intctrl.v",
+        "dir::../../rtl/spark_mcu_top.v"
+    ],
+    "VERILOG_INCLUDE_DIRS": ["dir::../../"],
+    "CLOCK_PORT": "clk",
+    "CLOCK_PERIOD": 62.5,
+    "FP_SIZING": "absolute",
+    "DIE_AREA": "0 0 3200 3200",
+    "CORE_AREA": "160 160 3040 3040",
+    "FP_CORE_UTIL": 35,
+    "PL_TARGET_DENSITY": 0.40,
+    "FP_PIN_ORDER_CFG": "dir::pin_order.cfg",
+    "FP_PDN_CORE_RING": true,
+    "SYNTH_STRATEGY": "AREA 0",
+    "SYNTH_MAX_FANOUT": 8,
+    "CTS_CLK_BUFFER_LIST": "sky130_fd_sc_hd__clkbuf_4 sky130_fd_sc_hd__clkbuf_8 sky130_fd_sc_hd__clkbuf_16",
+    "CTS_ROOT_BUFFER": "sky130_fd_sc_hd__clkbuf_16",
+    "DIODE_INSERTION_STRATEGY": 4,
+    "RUN_DRC": true,
+    "RUN_LVS": true,
+    "RUN_CVC": true,
+    "ROUTING_CORES": 4,
+    "pdk::sky130*": {
+        "MAX_FANOUT_CONSTRAINT": 8,
+        "CELL_PAD": 4,
+        "FP_PDN_VPITCH": 100,
+        "FP_PDN_HPITCH": 100,
+        "CLOCK_PERIOD": 62.5,
+        "scl::sky130_fd_sc_hd": {
+            "SYNTH_STRATEGY": "AREA 0"
+        }
+    }
+}

@@ -1,0 +1,5 @@
+make blink              # Build single app
+make all                # Build all examples
+make flash APP=blink    # Flash to hardware
+make size APP=blink     # Show binary size
+make dis APP=blink      # Disassemble

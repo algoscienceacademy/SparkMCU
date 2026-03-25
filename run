@@ -1,0 +1,1 @@
+./flow.tcl -design SparkMCU/openlane/spark_mcu_top
