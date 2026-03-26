@@ -10,6 +10,7 @@
         "dir::../../rtl/memory/spark_pmem.v",
         "dir::../../rtl/memory/spark_dmem.v",
         "dir::../../rtl/memory/spark_bus_ctrl.v",
+        "dir::../../rtl/memory/spark_flash_rom.v",
         "dir::../../rtl/peripherals/spark_gpio.v",
         "dir::../../rtl/peripherals/spark_uart.v",
         "dir::../../rtl/peripherals/spark_spi.v",

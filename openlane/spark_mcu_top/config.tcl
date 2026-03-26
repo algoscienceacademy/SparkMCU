@@ -19,6 +19,7 @@ set ::env(VERILOG_FILES) [glob \
     $::env(DESIGN_DIR)/../../rtl/memory/spark_pmem.v \
     $::env(DESIGN_DIR)/../../rtl/memory/spark_dmem.v \
     $::env(DESIGN_DIR)/../../rtl/memory/spark_bus_ctrl.v \
+    $::env(DESIGN_DIR)/../../rtl/memory/spark_flash_rom.v \
     $::env(DESIGN_DIR)/../../rtl/peripherals/spark_gpio.v \
     $::env(DESIGN_DIR)/../../rtl/peripherals/spark_uart.v \
     $::env(DESIGN_DIR)/../../rtl/peripherals/spark_spi.v \

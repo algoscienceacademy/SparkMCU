@@ -190,7 +190,7 @@ module spark_bus_ctrl (
 
         if (cpu_eio_rd || cpu_eio_wr) begin
             // UART registers (absolute 0xC0-0xC6)
-            if (cpu_eio_addr >= 8'h80 && cpu_eio_addr <= 8'h86) begin
+            if (cpu_eio_addr >= 8'hC0 && cpu_eio_addr <= 8'hC6) begin
                 uart_addr  = cpu_eio_addr;
                 uart_wdata = cpu_eio_wdata;
                 uart_rd    = cpu_eio_rd;

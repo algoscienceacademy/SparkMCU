@@ -27,7 +27,9 @@
 //
 // ============================================================================
 
-module tt_um_spark_mcu_top (
+module tt_um_spark_mcu_top #(
+    parameter HEX_FILE = ""  // Optional: firmware hex file for simulation
+) (
     input  wire        clk,          // System clock
     input  wire        rst_n,        // Active-low reset
 
@@ -79,7 +81,6 @@ module tt_um_spark_mcu_top (
     // -----------------------------------------------------------------------
     // Internal wires
     // -----------------------------------------------------------------------
-
     // CPU <-> Program Memory
     wire [15:0] pm_addr;
     wire [15:0] pm_data;
@@ -220,7 +221,8 @@ module tt_um_spark_mcu_top (
     // -----------------------------------------------------------------------
     spark_pmem #(
         .DEPTH (256),
-        .AW    (8)
+        .AW    (8),
+        .HEX_FILE (HEX_FILE)
     ) u_pmem (
         .clk       (clk),
         .rst_n     (rst_n),

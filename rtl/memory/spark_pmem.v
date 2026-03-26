@@ -8,7 +8,8 @@
 
 module spark_pmem #(
     parameter DEPTH = 256,      // 256 words (512B) - reduced for synthesis
-    parameter AW    = 8         // Address width = log2(DEPTH)
+    parameter AW    = 8,        // Address width = log2(DEPTH)
+    parameter HEX_FILE = ""     // Optional: load from hex file
 )(
     input  wire            clk,
     input  wire            rst_n,
@@ -27,11 +28,17 @@ module spark_pmem #(
     // Memory array
     reg [15:0] mem [0:DEPTH-1];
 
-    // Initialize to NOP (0x0000)
+    // Initialize to NOP (0x0000) or load from hex file
     integer i;
     initial begin
+        // First, initialize all to NOP
         for (i = 0; i < DEPTH; i = i + 1)
             mem[i] = 16'h0000;
+        
+        // Then, if HEX_FILE is provided, load it
+        if (HEX_FILE != "") begin
+            $readmemh(HEX_FILE, mem);
+        end
     end
 
     // Synchronous read

@@ -3,3 +3,6 @@ make all                # Build all examples
 make flash APP=blink    # Flash to hardware
 make size APP=blink     # Show binary size
 make dis APP=blink      # Disassemble
+
+make -f Makefile.fw verify
+make -f Makefile.fw build-fw > /dev/null && timeout 20 make -f Makefile.fw simulate 2>&1

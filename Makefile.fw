@@ -1,0 +1,160 @@
+# ============================================================================
+# SparkMCU Firmware-Driven Verification Makefile
+# ============================================================================
+# Targets:
+#   make build-fw         - Build firmware hex file
+#   make simulate         - Run simulation with iverilog
+#   make clean            - Clean build artifacts
+#   make help             - Show this help message
+# ============================================================================
+
+# Configuration
+MCU               := atmega328p
+F_CPU             := 16000000UL
+OPTIMIZER         := -Os
+SIMULATOR         := iverilog
+
+# Directories
+BUILD_DIR         := firmware/build
+SRC_DIR           := firmware/src
+INC_DIR           := firmware/include
+LIB_DIR           := firmware/lib
+RTL_DIR           := rtl
+TESTBENCH_DIR     := testbench
+
+# Target names
+TEST_NAME         ?= test_suite_main
+HEX_FILE          := $(BUILD_DIR)/$(TEST_NAME).hex
+ELF_FILE          := $(BUILD_DIR)/$(TEST_NAME).elf
+
+# Tools
+AVR_GCC           := avr-gcc
+AVR_OBJCOPY       := avr-objcopy
+AVR_SIZE          := avr-size
+IVERILOG          := iverilog
+VVP               := vvp
+RM                := rm -f
+MKDIR             := mkdir -p
+
+# Flags
+AVR_FLAGS         := -mmcu=$(MCU) -DF_CPU=$(F_CPU) -I$(INC_DIR)
+COMPILE_FLAGS     := $(OPTIMIZER) -Wall -Wextra -std=gnu99 -c
+LINK_FLAGS        := $(OPTIMIZER) -Wall
+
+# RTL sources
+RTL_SOURCES := \
+	$(RTL_DIR)/spark_mcu_top.v \
+	$(RTL_DIR)/core/spark_cpu.v \
+	$(RTL_DIR)/core/spark_alu.v \
+	$(RTL_DIR)/core/spark_decoder.v \
+	$(RTL_DIR)/core/spark_regfile.v \
+	$(RTL_DIR)/core/spark_pkg.v \
+	$(RTL_DIR)/memory/spark_pmem.v \
+	$(RTL_DIR)/memory/spark_dmem.v \
+	$(RTL_DIR)/memory/spark_bus_ctrl.v \
+	$(RTL_DIR)/memory/spark_flash_rom.v \
+	$(RTL_DIR)/peripherals/spark_gpio.v \
+	$(RTL_DIR)/peripherals/spark_uart.v \
+	$(RTL_DIR)/peripherals/spark_timer0.v \
+	$(RTL_DIR)/peripherals/spark_intctrl.v \
+	$(RTL_DIR)/peripherals/spark_spi.v
+
+TESTBENCH_SOURCES := $(TESTBENCH_DIR)/spark_mcu_test_tb.v
+
+# Phony targets
+.PHONY: help build-fw simulate clean verify all
+
+# Default target
+all: build-fw simulate
+
+# ============================================================================
+# Help
+# ============================================================================
+help:
+	@echo "SparkMCU Firmware-Driven Verification"
+	@echo "======================================="
+	@echo ""
+	@echo "Usage: make [target]"
+	@echo ""
+	@echo "Targets:"
+	@echo "  build-fw         Build firmware to hex (TEST_NAME=<name>)"
+	@echo "  simulate         Run HDL simulation"
+	@echo "  clean            Clean all build artifacts"
+	@echo "  help             Show this help message"
+	@echo "  all              Build firmware and simulate (default)"
+	@echo ""
+	@echo "Examples:"
+	@echo "  make build-fw TEST_NAME=test_suite_main"
+	@echo "  make simulate"
+	@echo "  make clean"
+	@echo ""
+
+# ============================================================================
+# Firmware Build Rules
+# ============================================================================
+
+$(BUILD_DIR):
+	@$(MKDIR) $@
+
+$(BUILD_DIR)/$(TEST_NAME).o: $(SRC_DIR)/$(TEST_NAME).c $(INC_DIR)/* | $(BUILD_DIR)
+	@echo "[COMPILE] $<"
+	@$(AVR_GCC) $(AVR_FLAGS) $(COMPILE_FLAGS) $< -o $@
+
+$(ELF_FILE): $(BUILD_DIR)/$(TEST_NAME).o | $(BUILD_DIR)
+	@echo "[LINK] Creating ELF"
+	@$(AVR_GCC) $(AVR_FLAGS) $(LINK_FLAGS) $^ -o $@
+	@echo "[SIZE]"
+	@$(AVR_SIZE) $@
+
+$(HEX_FILE): $(ELF_FILE)
+	@echo "[HEX] Converting to Intel HEX"
+	@$(AVR_OBJCOPY) -O ihex $< $@
+	@echo "[OK] Hex file: $@"
+
+build-fw: $(HEX_FILE)
+	@echo "[SUCCESS] Firmware build complete"
+
+# ============================================================================
+# Simulation Rules
+# ============================================================================
+
+$(BUILD_DIR)/spark_mcu.vvp: $(RTL_SOURCES) $(TESTBENCH_SOURCES) $(HEX_FILE)
+	@echo "[IVERILOG] Compiling design"
+	@$(IVERILOG) \
+		-g2009 \
+		-I$(RTL_DIR)/core \
+		-o $@ \
+		-DHEX_FILE="\"$(HEX_FILE)\"" \
+		$(RTL_SOURCES) $(TESTBENCH_SOURCES)
+
+simulate: $(BUILD_DIR)/spark_mcu.vvp
+	@echo "[VVP] Running simulation"
+	@$(VVP) $(BUILD_DIR)/spark_mcu.vvp -lxt2 -o $(BUILD_DIR)/spark_mcu.lxt
+
+# ============================================================================
+# Verification Flow
+# ============================================================================
+
+verify: clean build-fw simulate
+	@echo "[VERIFY] Verification complete"
+
+# ============================================================================
+# Cleanup
+# ============================================================================
+
+clean-fw:
+	@echo "[CLEAN] Firmware artifacts"
+	@$(RM) $(BUILD_DIR)/*.o $(BUILD_DIR)/*.elf $(BUILD_DIR)/*.hex
+
+clean-sim:
+	@echo "[CLEAN] Simulation artifacts"
+	@$(RM) $(BUILD_DIR)/*.vvp $(BUILD_DIR)/*.lxt $(BUILD_DIR)/*.vcd
+
+clean: clean-fw clean-sim
+	@echo "[CLEAN] All artifacts cleaned"
+
+# ============================================================================
+# Default target explanation
+# ============================================================================
+
+.DEFAULT_GOAL := help
